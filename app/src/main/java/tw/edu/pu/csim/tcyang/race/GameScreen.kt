@@ -4,18 +4,25 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun GameScreen(message: String, gameViewModel: GameViewModel) {
+
+    val imageBitmap = ImageBitmap.imageResource(R.drawable.horse0)
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -24,10 +31,12 @@ fun GameScreen(message: String, gameViewModel: GameViewModel) {
         Canvas (modifier = Modifier.fillMaxSize()
             .pointerInput(Unit) {
                 detectDragGestures { change, dragAmount ->
-                    change.consume()
+                    change.consume() // 告訴系統已經處理了這個事件
                     gameViewModel.MoveCircle( dragAmount.x, dragAmount.y)
                 }
             }
+
+
         ) {
             // 繪製圓形
             drawCircle(
@@ -35,21 +44,25 @@ fun GameScreen(message: String, gameViewModel: GameViewModel) {
                 radius = 100f,
                 center = Offset(gameViewModel.circleX, gameViewModel.circleY)
             )
+
+            drawImage(
+                image = imageBitmap,
+                dstOffset = IntOffset(0, 100),
+                dstSize = IntSize(300, 300)
+            )
+
         }
 
-        Column {
-            // 顯示螢幕尺寸、姓名和分數
-            Text(text = message + gameViewModel.screenWidthPx.toString() + "*"
-                    + gameViewModel.screenHeightPx.toString() + " 姓名：魏郁倫 分數：${gameViewModel.score}")
 
-            // 按鈕在文字下方
-            Button(onClick = {
-                gameViewModel.gameRunning = true
-                gameViewModel.StartGame()
-            }
-            ){
-                Text("遊戲開始")
-            }
+        Text(text = message + gameViewModel.screenWidthPx.toString() + "*"
+                + gameViewModel.screenHeightPx.toString() + " 魏郁倫 分數: ${gameViewModel.score}")
+
+        Button(onClick = {gameViewModel.gameRunning = true
+            gameViewModel.StartGame()
+        },
+            modifier = Modifier.padding(top = 40.dp)
+        ){
+            Text("遊戲開始")
         }
     }
 }
