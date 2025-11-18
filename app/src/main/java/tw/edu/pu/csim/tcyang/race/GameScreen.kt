@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -23,12 +24,10 @@ fun GameScreen(message: String, gameViewModel: GameViewModel) {
         Canvas (modifier = Modifier.fillMaxSize()
             .pointerInput(Unit) {
                 detectDragGestures { change, dragAmount ->
-                    change.consume() // 告訴系統已經處理了這個事件
+                    change.consume()
                     gameViewModel.MoveCircle( dragAmount.x, dragAmount.y)
                 }
             }
-
-
         ) {
             // 繪製圓形
             drawCircle(
@@ -38,15 +37,19 @@ fun GameScreen(message: String, gameViewModel: GameViewModel) {
             )
         }
 
+        Column {
+            // 顯示螢幕尺寸、姓名和分數
+            Text(text = message + gameViewModel.screenWidthPx.toString() + "*"
+                    + gameViewModel.screenHeightPx.toString() + " 姓名：魏郁倫 分數：${gameViewModel.score}")
 
-        Text(text = message + gameViewModel.screenWidthPx.toString() + "*"
-                + gameViewModel.screenHeightPx.toString())
-
-        Button(onClick = {gameViewModel.gameRunning = true
-            gameViewModel.StartGame()
-        }
-        ){
-           Text("遊戲開始")
+            // 按鈕在文字下方
+            Button(onClick = {
+                gameViewModel.gameRunning = true
+                gameViewModel.StartGame()
+            }
+            ){
+                Text("遊戲開始")
+            }
         }
     }
 }
