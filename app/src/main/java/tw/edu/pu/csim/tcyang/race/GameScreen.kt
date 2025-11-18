@@ -22,7 +22,12 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun GameScreen(message: String, gameViewModel: GameViewModel) {
 
-    val imageBitmap = ImageBitmap.imageResource(R.drawable.horse0)
+    val imageBitmaps = listOf(
+        ImageBitmap.imageResource(R.drawable.horse0),
+        ImageBitmap.imageResource(R.drawable.horse1),
+        ImageBitmap.imageResource(R.drawable.horse2),
+        ImageBitmap.imageResource(R.drawable.horse3)
+    )
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -46,13 +51,14 @@ fun GameScreen(message: String, gameViewModel: GameViewModel) {
             )
 
             drawImage(
-                image = imageBitmap,
-                dstOffset = IntOffset(0, 100),
+                image = imageBitmaps[gameViewModel.horse.number],
+                dstOffset = IntOffset(
+                    gameViewModel.horse.horseX,
+                    gameViewModel.horse.horseY),
                 dstSize = IntSize(300, 300)
             )
 
         }
-
 
         Text(text = message + gameViewModel.screenWidthPx.toString() + "*"
                 + gameViewModel.screenHeightPx.toString() + " 魏郁倫 分數: ${gameViewModel.score}")
