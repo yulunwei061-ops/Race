@@ -36,12 +36,10 @@ fun GameScreen(message: String, gameViewModel: GameViewModel) {
         Canvas (modifier = Modifier.fillMaxSize()
             .pointerInput(Unit) {
                 detectDragGestures { change, dragAmount ->
-                    change.consume() // 告訴系統已經處理了這個事件
+                    change.consume()
                     gameViewModel.MoveCircle( dragAmount.x, dragAmount.y)
                 }
             }
-
-
         ) {
             // 繪製圓形
             drawCircle(
@@ -50,20 +48,23 @@ fun GameScreen(message: String, gameViewModel: GameViewModel) {
                 center = Offset(gameViewModel.circleX, gameViewModel.circleY)
             )
 
-            drawImage(
-                image = imageBitmaps[gameViewModel.horse.number],
-                dstOffset = IntOffset(
-                    gameViewModel.horse.horseX,
-                    gameViewModel.horse.horseY),
-                dstSize = IntSize(300, 300)
-            )
-
+            // 繪製三匹馬
+            for (i in 0..2) {
+                drawImage(
+                    image = imageBitmaps[gameViewModel.horses[i].number],
+                    dstOffset = IntOffset(
+                        gameViewModel.horses[i].horseX,
+                        gameViewModel.horses[i].horseY),
+                    dstSize = IntSize(300, 300)
+                )
+            }
         }
 
-        Text(text = message + gameViewModel.screenWidthPx.toString() + "*"
-                + gameViewModel.screenHeightPx.toString() + " 魏郁倫 分數: ${gameViewModel.score}")
+        Text(text = "賽馬遊戲(作者:魏郁倫) " + gameViewModel.screenWidthPx.toString() + "*"
+                + gameViewModel.screenHeightPx.toString() + " 分數: ${gameViewModel.score} ${gameViewModel.winnerText}")
 
-        Button(onClick = {gameViewModel.gameRunning = true
+        Button(onClick = {
+            gameViewModel.gameRunning = true
             gameViewModel.StartGame()
         },
             modifier = Modifier.padding(top = 40.dp)
